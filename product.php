@@ -19,23 +19,10 @@ $page = 'product';
     <!-- Page Header -->
     <section class="page-header">
         <div class="container">
-            <span class="page-subtitle">Our Collection</span>
-            <h1 class="page-title">Premium Coffee<br>Selection</h1>
+            <span class="page-subtitle">Produk Kami</span>
+            <h1 class="page-title">Kopi Premium<br>Pilihan</h1>
         </div>
     </section>
-
-    <!-- Filter Section -->
-    <section class="product-filter">
-        <div class="container">
-            <div class="filter-buttons">
-                <button class="filter-btn active" data-filter="all">All Coffees</button>
-                <button class="filter-btn" data-filter="light">Light Roast</button>
-                <button class="filter-btn" data-filter="medium">Medium Roast</button>
-                <button class="filter-btn" data-filter="dark">Dark Roast</button>
-            </div>
-        </div>
-    </section>
-
     <!-- Products Grid -->
     <section class="products-section">
         <div class="container">

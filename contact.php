@@ -41,8 +41,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <!-- Page Header -->
     <section class="page-header">
         <div class="container">
-            <span class="page-subtitle">Get In Touch</span>
-            <h1 class="page-title">Let's Talk<br>Coffee</h1>
+            <span class="page-subtitle">Hubungi Kami</span>
+            <h1 class="page-title">Hubungi Kami untuk<br>Pemesanan</h1>
         </div>
     </section>
 

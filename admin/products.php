@@ -9,7 +9,7 @@ if (isset($_GET['delete'])) {
     $id = intval($_GET['delete']);
     $delete_sql = "DELETE FROM products WHERE id = ?";
     $stmt = mysqli_prepare($conn, $delete_sql);
-    mysqli_stmt_bind_param($stmt, "i", $id);
+    mysqli_stmt_bind_param($stmt, "i", $id); // 1 parameter: ID (integer)
     
     if (mysqli_stmt_execute($stmt)) {
         $success_message = "Product deleted successfully!";
@@ -33,15 +33,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $is_organic = isset($_POST['is_organic']) ? 1 : 0;
     
     if ($id > 0) {
-        // Update
+        // UPDATE: 10 Parameter (9 Kolom + 1 ID untuk WHERE)
         $sql = "UPDATE products SET name=?, origin=?, roast_level=?, flavor_notes=?, description=?, price=?, stock_quantity=?, is_featured=?, is_organic=? WHERE id=?";
         $stmt = mysqli_prepare($conn, $sql);
-        mysqli_stmt_bind_param($stmt, "sssssdiixi", $name, $origin, $roast_level, $flavor_notes, $description, $price, $stock_quantity, $is_featured, $is_organic, $id);
+        // Tipe data: s (string), d (double/price), i (integer)
+        // Format: s s s s s d i i i i (Total 10)
+        mysqli_stmt_bind_param($stmt, "sssssdiiii", $name, $origin, $roast_level, $flavor_notes, $description, $price, $stock_quantity, $is_featured, $is_organic, $id);
     } else {
-        // Insert
+        // INSERT: 9 Parameter
         $sql = "INSERT INTO products (name, origin, roast_level, flavor_notes, description, price, stock_quantity, is_featured, is_organic) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         $stmt = mysqli_prepare($conn, $sql);
-        mysqli_stmt_bind_param($stmt, "sssssdixi", $name, $origin, $roast_level, $flavor_notes, $description, $price, $stock_quantity, $is_featured, $is_organic);
+        // Format: s s s s s d i i i (Total 9)
+        mysqli_stmt_bind_param($stmt, "sssssdiii", $name, $origin, $roast_level, $flavor_notes, $description, $price, $stock_quantity, $is_featured, $is_organic);
     }
     
     if (mysqli_stmt_execute($stmt)) {
@@ -51,7 +54,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
     mysqli_stmt_close($stmt);
 }
-
 // Get all products
 $products_query = "SELECT * FROM products ORDER BY created_at DESC";
 $products_result = mysqli_query($conn, $products_query);
