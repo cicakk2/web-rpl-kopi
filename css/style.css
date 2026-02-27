@@ -1087,3 +1087,67 @@ img {
         flex-direction: column;
     }
 }
+
+/* Styling Baru untuk Halaman About Minimalis */
+.about-page-main {
+    padding-top: 120px; /* Jarak agar tidak tertutup header fixed */
+    padding-bottom: 60px;
+    background: var(--white);
+}
+
+.page-title-simple {
+    font-family: var(--font-display);
+    font-size: 3rem;
+    color: var(--coffee-dark);
+    margin-bottom: 3rem;
+    text-align: left; /* Sesuaikan gambar: kiri atau center */
+}
+
+.about-simple-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.5fr; /* Gambar lebih kecil dari teks */
+    gap: 2rem;
+    align-items: start;
+    margin-bottom: 4rem;
+}
+
+.about-image-wrapper img {
+    width: 100%;
+    height: auto;
+    border-radius: 4px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+/* Placeholder jika gambar belum ada */
+.image-placeholder-v2 {
+    width: 100%;
+    height: 300px;
+    background: #e0e0e0;
+    border-radius: 4px;
+}
+
+.about-text-content p {
+    font-size: 1.1rem;
+    line-height: 1.8;
+    color: var(--text-light);
+}
+
+.map-container-simple {
+    width: 100%;
+    margin-top: 2rem;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+/* Responsive untuk Mobile */
+@media (max-width: 768px) {
+    .about-simple-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .page-title-simple {
+        font-size: 2.2rem;
+        text-align: center;
+    }
+}

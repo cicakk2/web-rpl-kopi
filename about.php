@@ -7,7 +7,7 @@ $page = 'about';
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>About Us - Roasted Bliss</title>
+    <title>Tentang Kami - Robusta Dampit</title>
     <link rel="stylesheet" href="css/style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -16,86 +16,31 @@ $page = 'about';
 <body>
     <?php include 'includes/header.php'; ?>
 
-    <!-- Page Header -->
-    <section class="page-header">
+    <main class="about-page-main">
         <div class="container">
-            <span class="page-subtitle">Our Story</span>
-            <h1 class="page-title">Crafting Excellence<br>One Cup at a Time</h1>
-        </div>
-    </section>
+            <h1 class="page-title-simple">Tentang Kami</h1>
 
-    <!-- About Content -->
-    <section class="about-content">
-        <div class="container">
-            <div class="about-grid">
-                <div class="about-text">
-                    <h2>Our Journey</h2>
-                    <p>Founded in 2024, Roasted Bliss began with a simple mission: to bring exceptional, ethically-sourced coffee to passionate enthusiasts. What started as a small roastery has grown into a beloved destination for those who appreciate the art and science of specialty coffee.</p>
-                    <p>Every bean that passes through our hands is carefully selected from sustainable farms around the world. We believe in building lasting relationships with our farmers, ensuring fair prices and supporting communities that share our commitment to quality.</p>
-                    <p>Our small-batch roasting approach allows us to highlight the unique characteristics of each origin, creating profiles that honor the hard work of everyone involved in bringing these exceptional coffees to your cup.</p>
+            <div class="about-simple-grid">
+                <div class="about-image-wrapper">
+                    <img src="images/barista.jpg" alt="Barista Robusta Dampit" class="img-fluid rounded">
                 </div>
-                <div class="about-image">
-                    <div class="image-placeholder" style="background: linear-gradient(135deg, #6B4423 0%, #3E2723 100%);"></div>
+                <div class="about-text-content">
+                    <p>Robusta Dampit adalah brand kopi yang berfokus menghadirkan bubuk kopi berkualitas dari biji pilihan Nusantara. Setiap produk kami melalui proses sangrai yang terkontrol untuk menjaga aroma, rasa, dan kesegaran terbaik di setiap seduhan. Kami berkomitmen memberikan kopi yang konsisten, nikmat, dan mudah dinikmati oleh pecinta kopi, baik untuk konsumsi harian maupun kebutuhan usaha.</p>
                 </div>
             </div>
-        </div>
-    </section>
 
-    <!-- Values Section -->
-    <section class="values">
-        <div class="container">
-            <h2 class="section-title">What Drives Us</h2>
-            <div class="values-grid">
-                <div class="value-item">
-                    <div class="value-number">01</div>
-                    <h3>Quality First</h3>
-                    <p>We never compromise on quality. Every bean is carefully inspected and roasted to bring out its best characteristics.</p>
-                </div>
-                <div class="value-item">
-                    <div class="value-number">02</div>
-                    <h3>Sustainability</h3>
-                    <p>Supporting sustainable farming practices and fair trade relationships that benefit farmers and communities.</p>
-                </div>
-                <div class="value-item">
-                    <div class="value-number">03</div>
-                    <h3>Community</h3>
-                    <p>Building a community of coffee lovers who share our passion for exceptional coffee experiences.</p>
-                </div>
-                <div class="value-item">
-                    <div class="value-number">04</div>
-                    <h3>Innovation</h3>
-                    <p>Constantly exploring new roasting techniques and brewing methods to enhance your coffee experience.</p>
-                </div>
+            <div class="map-container-simple">
+                <iframe 
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d126438.2854809287!2d112.5617424!3d-7.9784695!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2dd62822025136df%3A0x1042718428e2363a!2sMalang%2C%20East%20Java!5e0!3m2!1sen!2sid!4v1700000000000!5m2!1sen!2sid" 
+                    width="100%" 
+                    height="450" 
+                    style="border:0;" 
+                    allowfullscreen="" 
+                    loading="lazy">
+                </iframe>
             </div>
         </div>
-    </section>
-
-    <!-- Team Section -->
-    <section class="team">
-        <div class="container">
-            <h2 class="section-title">Meet Our Roasters</h2>
-            <div class="team-grid">
-                <div class="team-member">
-                    <div class="member-image" style="background: linear-gradient(135deg, #8B5A3C 0%, #4E342E 100%);"></div>
-                    <h3>Sarah Mitchell</h3>
-                    <p class="member-role">Head Roaster</p>
-                    <p class="member-bio">15 years of experience crafting perfect roast profiles</p>
-                </div>
-                <div class="team-member">
-                    <div class="member-image" style="background: linear-gradient(135deg, #6B4423 0%, #3E2723 100%);"></div>
-                    <h3>James Rodriguez</h3>
-                    <p class="member-role">Coffee Sourcing</p>
-                    <p class="member-bio">Direct relationships with farmers across 12 countries</p>
-                </div>
-                <div class="team-member">
-                    <div class="member-image" style="background: linear-gradient(135deg, #5D4037 0%, #3E2723 100%);"></div>
-                    <h3>Emma Chen</h3>
-                    <p class="member-role">Quality Control</p>
-                    <p class="member-bio">Certified Q-Grader ensuring consistency and excellence</p>
-                </div>
-            </div>
-        </div>
-    </section>
+    </main>
 
     <?php include 'includes/footer.php'; ?>
     <script src="js/script.js"></script>
