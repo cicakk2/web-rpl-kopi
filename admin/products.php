@@ -7,9 +7,28 @@ $error_message = '';
 // Handle Delete
 if (isset($_GET['delete'])) {
     $id = intval($_GET['delete']);
+    
+    // Get image path before deleting
+    $img_query = "SELECT image_url FROM products WHERE id = ?";
+    $stmt = mysqli_prepare($conn, $img_query);
+    mysqli_stmt_bind_param($stmt, "i", $id);
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
+    $product = mysqli_fetch_assoc($result);
+    mysqli_stmt_close($stmt);
+    
+    // Delete image file if exists
+    if ($product && $product['image_url']) {
+        $image_path = "../uploads/" . basename($product['image_url']);
+        if (file_exists($image_path)) {
+            unlink($image_path);
+        }
+    }
+    
+    // Delete product from database
     $delete_sql = "DELETE FROM products WHERE id = ?";
     $stmt = mysqli_prepare($conn, $delete_sql);
-    mysqli_stmt_bind_param($stmt, "i", $id); // 1 parameter: ID (integer)
+    mysqli_stmt_bind_param($stmt, "i", $id);
     
     if (mysqli_stmt_execute($stmt)) {
         $success_message = "Product deleted successfully!";
@@ -31,29 +50,99 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $stock_quantity = intval($_POST['stock_quantity']);
     $is_featured = isset($_POST['is_featured']) ? 1 : 0;
     $is_organic = isset($_POST['is_organic']) ? 1 : 0;
+    $image_url = '';
     
-    if ($id > 0) {
-        // UPDATE: 10 Parameter (9 Kolom + 1 ID untuk WHERE)
-        $sql = "UPDATE products SET name=?, origin=?, roast_level=?, flavor_notes=?, description=?, price=?, stock_quantity=?, is_featured=?, is_organic=? WHERE id=?";
-        $stmt = mysqli_prepare($conn, $sql);
-        // Tipe data: s (string), d (double/price), i (integer)
-        // Format: s s s s s d i i i i (Total 10)
-        mysqli_stmt_bind_param($stmt, "sssssdiiii", $name, $origin, $roast_level, $flavor_notes, $description, $price, $stock_quantity, $is_featured, $is_organic, $id);
-    } else {
-        // INSERT: 9 Parameter
-        $sql = "INSERT INTO products (name, origin, roast_level, flavor_notes, description, price, stock_quantity, is_featured, is_organic) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        $stmt = mysqli_prepare($conn, $sql);
-        // Format: s s s s s d i i i (Total 9)
-        mysqli_stmt_bind_param($stmt, "sssssdiii", $name, $origin, $roast_level, $flavor_notes, $description, $price, $stock_quantity, $is_featured, $is_organic);
+    // Handle image upload
+    if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
+        $allowed_extensions = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
+        $file_name = $_FILES['image']['name'];
+        $file_tmp = $_FILES['image']['tmp_name'];
+        $file_size = $_FILES['image']['size'];
+        $file_extension = strtolower(pathinfo($file_name, PATHINFO_EXTENSION));
+        
+        // Validation
+        if (!in_array($file_extension, $allowed_extensions)) {
+            $error_message = "Invalid file format. Allowed: JPG, PNG, GIF, WEBP";
+        } elseif ($file_size > 5 * 1024 * 1024) { // 5MB limit
+            $error_message = "File size too large. Maximum 5MB allowed.";
+        } else {
+            // Create unique filename
+            $new_filename = 'product_' . time() . '_' . uniqid() . '.' . $file_extension;
+            $upload_dir = '../uploads/';
+            
+            // Create directory if not exists
+            if (!is_dir($upload_dir)) {
+                mkdir($upload_dir, 0755, true);
+            }
+            
+            $upload_path = $upload_dir . $new_filename;
+            
+            if (move_uploaded_file($file_tmp, $upload_path)) {
+                $image_url = $new_filename;
+                
+                // Delete old image if editing
+                if ($id > 0) {
+                    $old_img_query = "SELECT image_url FROM products WHERE id = ?";
+                    $stmt = mysqli_prepare($conn, $old_img_query);
+                    mysqli_stmt_bind_param($stmt, "i", $id);
+                    mysqli_stmt_execute($stmt);
+                    $result = mysqli_stmt_get_result($stmt);
+                    $old_product = mysqli_fetch_assoc($result);
+                    mysqli_stmt_close($stmt);
+                    
+                    if ($old_product && $old_product['image_url']) {
+                        $old_image_path = $upload_dir . $old_product['image_url'];
+                        if (file_exists($old_image_path)) {
+                            unlink($old_image_path);
+                        }
+                    }
+                }
+            } else {
+                $error_message = "Failed to upload image. Please try again.";
+            }
+        }
+    } else if ($id > 0 && !isset($_FILES['image'])) {
+        // If editing without uploading new image, keep old image
+        $old_img_query = "SELECT image_url FROM products WHERE id = ?";
+        $stmt = mysqli_prepare($conn, $old_img_query);
+        mysqli_stmt_bind_param($stmt, "i", $id);
+        mysqli_stmt_execute($stmt);
+        $result = mysqli_stmt_get_result($stmt);
+        $old_product = mysqli_fetch_assoc($result);
+        mysqli_stmt_close($stmt);
+        
+        $image_url = $old_product['image_url'] ?? '';
     }
     
-    if (mysqli_stmt_execute($stmt)) {
-        $success_message = $id > 0 ? "Product updated successfully!" : "Product added successfully!";
-    } else {
-        $error_message = "Error saving product.";
+    // Save to database only if no error occurred
+    if (!$error_message) {
+        if ($id > 0) {
+            // UPDATE: 11 Parameter (10 Kolom + 1 ID untuk WHERE)
+            if ($image_url) {
+                $sql = "UPDATE products SET name=?, origin=?, roast_level=?, flavor_notes=?, description=?, price=?, stock_quantity=?, is_featured=?, is_organic=?, image_url=? WHERE id=?";
+                $stmt = mysqli_prepare($conn, $sql);
+                mysqli_stmt_bind_param($stmt, "sssssdiiisi", $name, $origin, $roast_level, $flavor_notes, $description, $price, $stock_quantity, $is_featured, $is_organic, $image_url, $id);
+            } else {
+                $sql = "UPDATE products SET name=?, origin=?, roast_level=?, flavor_notes=?, description=?, price=?, stock_quantity=?, is_featured=?, is_organic=? WHERE id=?";
+                $stmt = mysqli_prepare($conn, $sql);
+                mysqli_stmt_bind_param($stmt, "sssssdiiii", $name, $origin, $roast_level, $flavor_notes, $description, $price, $stock_quantity, $is_featured, $is_organic, $id);
+            }
+        } else {
+            // INSERT: 10 Parameter
+            $sql = "INSERT INTO products (name, origin, roast_level, flavor_notes, description, price, stock_quantity, is_featured, is_organic, image_url) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            $stmt = mysqli_prepare($conn, $sql);
+            mysqli_stmt_bind_param($stmt, "sssssdiiiis", $name, $origin, $roast_level, $flavor_notes, $description, $price, $stock_quantity, $is_featured, $is_organic, $image_url);
+        }
+        
+        if (mysqli_stmt_execute($stmt)) {
+            $success_message = $id > 0 ? "Product updated successfully!" : "Product added successfully!";
+        } else {
+            $error_message = "Error saving product.";
+        }
+        mysqli_stmt_close($stmt);
     }
-    mysqli_stmt_close($stmt);
 }
+
 // Get all products
 $products_query = "SELECT * FROM products ORDER BY created_at DESC";
 $products_result = mysqli_query($conn, $products_query);
@@ -92,14 +181,14 @@ if (isset($_GET['edit'])) {
         <div class="admin-main">
             <div class="page-header">
                 <div>
-                    <h1>Products Management</h1>
-                    <p>Add, edit, and manage your coffee products</p>
+                    <h1>Manajemen Produk</h1>
+                    <p>Tambahkan dan Edit Produkmu.</p>
                 </div>
                 <button class="btn btn-primary" onclick="openModal()">
                     <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
                         <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd"/>
                     </svg>
-                    Add New Product
+                    Tambahkan Produk Baru
                 </button>
             </div>
             
@@ -127,25 +216,31 @@ if (isset($_GET['edit'])) {
                     <table class="admin-table">
                         <thead>
                             <tr>
-                                <th>ID</th>
-                                <th>Name</th>
-                                <th>Origin</th>
-                                <th>Roast Level</th>
-                                <th>Price</th>
-                                <th>Stock</th>
+                                <th>Gambar</th>
+                                <th>Nama</th>
+                                <th>Asal</th>
+                                <th>Warna</th>
+                                <th>Harga</th>
+                                <th>Stok</th>
                                 <th>Featured</th>
-                                <th>Actions</th>
+                                <th>Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
                             <?php if (mysqli_num_rows($products_result) > 0): ?>
                                 <?php while ($product = mysqli_fetch_assoc($products_result)): ?>
                                     <tr>
-                                        <td><?php echo $product['id']; ?></td>
+                                        <td>
+                                            <?php if ($product['image_url']): ?>
+                                                <img src="../uploads/<?php echo htmlspecialchars($product['image_url']); ?>" alt="<?php echo htmlspecialchars($product['name']); ?>" class="table-product-image">
+                                            <?php else: ?>
+                                                <div class="no-image-placeholder">No Image</div>
+                                            <?php endif; ?>
+                                        </td>
                                         <td><strong><?php echo htmlspecialchars($product['name']); ?></strong></td>
                                         <td><?php echo htmlspecialchars($product['origin']); ?></td>
                                         <td><span class="badge badge-<?php echo $product['roast_level']; ?>"><?php echo ucfirst($product['roast_level']); ?></span></td>
-                                        <td>$<?php echo number_format($product['price'], 2); ?></td>
+                                        <td>Rp. <?php echo number_format($product['price'], 2); ?></td>
                                         <td>
                                             <span class="stock-badge <?php echo $product['stock_quantity'] < 20 ? 'stock-low' : 'stock-good'; ?>">
                                                 <?php echo $product['stock_quantity']; ?>
@@ -190,54 +285,75 @@ if (isset($_GET['edit'])) {
     <div id="productModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h2 id="modalTitle">Add New Product</h2>
+                <h2 id="modalTitle">Tambahkan Produk Baru`</h2>
                 <button class="modal-close" onclick="closeModal()">&times;</button>
             </div>
-            <form method="POST" action="">
+            <form method="POST" action="" enctype="multipart/form-data">
                 <input type="hidden" id="product_id" name="id" value="">
                 
                 <div class="form-row">
                     <div class="form-group">
-                        <label for="name">Product Name *</label>
+                        <label for="name">Nama Produk *</label>
                         <input type="text" id="name" name="name" required>
                     </div>
                     
                     <div class="form-group">
-                        <label for="origin">Origin *</label>
+                        <label for="origin">Asal *</label>
                         <input type="text" id="origin" name="origin" required>
                     </div>
                 </div>
                 
                 <div class="form-row">
                     <div class="form-group">
-                        <label for="roast_level">Roast Level *</label>
+                        <label for="roast_level">Warna *</label>
                         <select id="roast_level" name="roast_level" required>
-                            <option value="light">Light Roast</option>
-                            <option value="medium">Medium Roast</option>
-                            <option value="dark">Dark Roast</option>
+                            <option value="light">Cream</option>
+                            <option value="medium">Tan</option>
+                            <option value="dark">Dark</option>
                         </select>
                     </div>
                     
                     <div class="form-group">
-                        <label for="flavor_notes">Flavor Notes *</label>
+                        <label for="flavor_notes">Karakter Rasa *</label>
                         <input type="text" id="flavor_notes" name="flavor_notes" placeholder="e.g., Floral, Citrus, Tea-like" required>
                     </div>
                 </div>
                 
                 <div class="form-group">
-                    <label for="description">Description *</label>
+                    <label for="description">Deskripsi *</label>
                     <textarea id="description" name="description" rows="3" required></textarea>
                 </div>
                 
                 <div class="form-row">
                     <div class="form-group">
-                        <label for="price">Price ($) *</label>
+                        <label for="price">Price (Rp) *</label>
                         <input type="number" id="price" name="price" step="0.01" min="0" required>
                     </div>
                     
                     <div class="form-group">
-                        <label for="stock_quantity">Stock Quantity *</label>
+                        <label for="stock_quantity">Jumlah Stok *</label>
                         <input type="number" id="stock_quantity" name="stock_quantity" min="0" required>
+                    </div>
+                </div>
+                
+                <!-- Image Upload Section -->
+                <div class="form-group">
+                    <label for="image">Gambar Produk</label>
+                    <div class="image-upload-container">
+                        <input type="file" id="image" name="image" accept="image/jpeg,image/png,image/gif,image/webp" class="image-input">
+                        <div class="image-upload-label">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                <polyline points="17 8 12 3 7 8"></polyline>
+                                <line x1="12" y1="3" x2="12" y2="15"></line>
+                            </svg>
+                            <span>Click to upload or drag and drop</span>
+                            <p>PNG, JPG, GIF, WEBP (Max 5MB)</p>
+                        </div>
+                    </div>
+                    <div id="imagePreviewContainer" class="image-preview-container" style="display: none;">
+                        <img id="imagePreview" src="" alt="Preview" class="image-preview-img">
+                        <button type="button" class="btn-remove-image" onclick="removeImage()">Remove Image</button>
                     </div>
                 </div>
                 
@@ -258,8 +374,8 @@ if (isset($_GET['edit'])) {
                 </div>
                 
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancel</button>
-                    <button type="submit" class="btn btn-primary">Save Product</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeModal()">Batalkan</button>
+                    <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
                 </div>
             </form>
         </div>
@@ -270,9 +386,10 @@ if (isset($_GET['edit'])) {
     <script>
         function openModal() {
             document.getElementById('productModal').style.display = 'flex';
-            document.getElementById('modalTitle').textContent = 'Add New Product';
+            document.getElementById('modalTitle').textContent = 'Tambahkan Produk Baru';
             document.querySelector('#productModal form').reset();
             document.getElementById('product_id').value = '';
+            document.getElementById('imagePreviewContainer').style.display = 'none';
         }
         
         function closeModal() {
@@ -281,7 +398,7 @@ if (isset($_GET['edit'])) {
         
         function editProduct(product) {
             document.getElementById('productModal').style.display = 'flex';
-            document.getElementById('modalTitle').textContent = 'Edit Product';
+            document.getElementById('modalTitle').textContent = 'Edit Produk';
             document.getElementById('product_id').value = product.id;
             document.getElementById('name').value = product.name;
             document.getElementById('origin').value = product.origin;
@@ -292,6 +409,57 @@ if (isset($_GET['edit'])) {
             document.getElementById('stock_quantity').value = product.stock_quantity;
             document.getElementById('is_featured').checked = product.is_featured == 1;
             document.getElementById('is_organic').checked = product.is_organic == 1;
+            
+            // Show existing image if available
+            if (product.image_url) {
+                const previewContainer = document.getElementById('imagePreviewContainer');
+                const previewImg = document.getElementById('imagePreview');
+                previewImg.src = '../uploads/' + product.image_url;
+                previewContainer.style.display = 'block';
+            }
+        }
+        
+        function removeImage() {
+            document.getElementById('image').value = '';
+            document.getElementById('imagePreviewContainer').style.display = 'none';
+        }
+        
+        // Image preview on file select
+        const imageInput = document.getElementById('image');
+        if (imageInput) {
+            imageInput.addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        document.getElementById('imagePreview').src = e.target.result;
+                        document.getElementById('imagePreviewContainer').style.display = 'block';
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+            
+            // Drag and drop
+            const uploadContainer = document.querySelector('.image-upload-container');
+            uploadContainer.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                this.classList.add('dragover');
+            });
+            
+            uploadContainer.addEventListener('dragleave', function() {
+                this.classList.remove('dragover');
+            });
+            
+            uploadContainer.addEventListener('drop', function(e) {
+                e.preventDefault();
+                this.classList.remove('dragover');
+                const files = e.dataTransfer.files;
+                if (files.length > 0) {
+                    imageInput.files = files;
+                    const event = new Event('change', { bubbles: true });
+                    imageInput.dispatchEvent(event);
+                }
+            });
         }
         
         // Close modal when clicking outside

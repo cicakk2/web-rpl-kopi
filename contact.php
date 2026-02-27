@@ -29,7 +29,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Contact Us - Roasted Bliss</title>
+    <title>Kontak - Robusta Dampit</title>
     <link rel="stylesheet" href="css/style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -89,8 +89,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <h4>Follow Us</h4>
                         <div class="social-icons">
                             <a href="#" class="social-icon">Instagram</a>
-                            <a href="#" class="social-icon">Facebook</a>
-                            <a href="#" class="social-icon">Twitter</a>
                         </div>
                     </div>
                 </div>
