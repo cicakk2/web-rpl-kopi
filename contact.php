@@ -51,86 +51,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <div class="container">
             <div class="contact-grid">
                 <div class="contact-info">
-                    <h2>Visit Our Roastery</h2>
-                    <p>We'd love to hear from you. Whether you have a question about our coffee, need help choosing the perfect roast, or just want to chat about coffee, we're here.</p>
+                    <h2>Temukan Kopi Favorit Anda</h2>
+                    <p>Masih bingung memilih kopi yang pas? Hubungi kami untuk rekomendasi terbaik dan nikmati kualitas kopi pilihan untuk setiap momen Anda.</p>
                     
-                    <div class="contact-details">
-                        <div class="contact-item">
-                            <div class="contact-icon">📍</div>
-                            <div>
-                                <h4>Location</h4>
-                                <p>123 Coffee Lane<br>Portland, OR 97209</p>
-                            </div>
-                        </div>
-                        <div class="contact-item">
-                            <div class="contact-icon">📧</div>
-                            <div>
-                                <h4>Email</h4>
-                                <p>hello@roastedbliss.com<br>orders@roastedbliss.com</p>
-                            </div>
-                        </div>
-                        <div class="contact-item">
-                            <div class="contact-icon">📞</div>
-                            <div>
-                                <h4>Phone</h4>
-                                <p>+1 (555) 123-4567<br>Mon-Fri: 9am - 6pm PST</p>
-                            </div>
-                        </div>
-                        <div class="contact-item">
-                            <div class="contact-icon">⏰</div>
-                            <div>
-                                <h4>Hours</h4>
-                                <p>Monday - Friday: 8am - 7pm<br>Saturday - Sunday: 9am - 5pm</p>
-                            </div>
-                        </div>
-                    </div>
-
                     <div class="social-links">
-                        <h4>Follow Us</h4>
+                        <h4>Ikuti Kami</h4>
                         <div class="social-icons">
                             <a href="#" class="social-icon">Instagram</a>
+                            <a href="#" class="social-icon">Whatsapp</a>
                         </div>
                     </div>
                 </div>
-
-                <div class="contact-form-wrapper">
-                    <?php if ($success_message): ?>
-                        <div class="alert alert-success"><?php echo $success_message; ?></div>
-                    <?php endif; ?>
-                    
-                    <?php if ($error_message): ?>
-                        <div class="alert alert-error"><?php echo $error_message; ?></div>
-                    <?php endif; ?>
-
-                    <form class="contact-form" method="POST" action="">
-                        <div class="form-group">
-                            <label for="name">Your Name</label>
-                            <input type="text" id="name" name="name" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="email">Email Address</label>
-                            <input type="email" id="email" name="email" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="subject">Subject</label>
-                            <input type="text" id="subject" name="subject" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="message">Message</label>
-                            <textarea id="message" name="message" rows="6" required></textarea>
-                        </div>
-                        <button type="submit" class="btn btn-primary">Send Message</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Map Section -->
-    <section class="map-section">
-        <div class="map-placeholder">
-            <div class="map-overlay">
-                <p>📍 Visit us at 123 Coffee Lane, Portland</p>
             </div>
         </div>
     </section>

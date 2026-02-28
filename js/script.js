@@ -170,29 +170,46 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
 });
 
 // ==========================================
-// Add to Cart Animation (Placeholder)
+// Add to Cart Animation (Updated for Product Detail)
 // ==========================================
 document.addEventListener('DOMContentLoaded', function() {
+    const checkoutButtons = document.querySelectorAll('.btn-checkout');
     const addToCartButtons = document.querySelectorAll('.btn-small');
     
+    // For product detail page
+    checkoutButtons.forEach(button => {
+        button.addEventListener('click', function(e) {
+            e.preventDefault();
+            handleAddToCart(this);
+        });
+    });
+    
+    // For product grid (legacy support)
     addToCartButtons.forEach(button => {
         if (button.textContent.includes('Add to Cart')) {
             button.addEventListener('click', function(e) {
                 e.preventDefault();
-                
-                // Change button text temporarily
-                const originalText = this.textContent;
-                this.textContent = 'Added!';
-                this.style.background = '#4CAF50';
-                
-                setTimeout(() => {
-                    this.textContent = originalText;
-                    this.style.background = '';
-                }, 1500);
+                handleAddToCart(this);
             });
         }
     });
 });
+
+// Helper function for add to cart animation
+function handleAddToCart(button) {
+    const originalText = button.textContent;
+    button.textContent = 'Ditambahkan!';
+    button.style.background = '#4CAF50';
+    
+    // Disable button during animation
+    button.disabled = true;
+    
+    setTimeout(() => {
+        button.textContent = originalText;
+        button.style.background = '';
+        button.disabled = false;
+    }, 1500);
+}
 
 // ==========================================
 // Parallax Effect for Hero
@@ -242,4 +259,40 @@ document.addEventListener('DOMContentLoaded', function() {
     });
     
     images.forEach(img => imageObserver.observe(img));
+});
+
+// ==========================================
+// Product Detail Page - Additional Interactions
+// ==========================================
+document.addEventListener('DOMContentLoaded', function() {
+    // Sticky image height adjustment on resize
+    const productDetailImage = document.querySelector('.product-detail-image');
+    if (productDetailImage) {
+        window.addEventListener('resize', function() {
+            // Adjust sticky position based on header height on mobile
+            if (window.innerWidth <= 768) {
+                productDetailImage.style.position = 'static';
+            } else {
+                productDetailImage.style.position = 'sticky';
+            }
+        });
+    }
+    
+    // Product detail scroll tracking (optional analytics)
+    const productDetailContent = document.querySelector('.product-detail-content');
+    if (productDetailContent) {
+        let hasScrolledToPrice = false;
+        
+        window.addEventListener('scroll', function() {
+            const priceSection = document.querySelector('.price-section');
+            if (priceSection && !hasScrolledToPrice) {
+                const rect = priceSection.getBoundingClientRect();
+                if (rect.top < window.innerHeight) {
+                    hasScrolledToPrice = true;
+                    // You can track this event for analytics
+                    // console.log('User scrolled to price section');
+                }
+            }
+        });
+    }
 });

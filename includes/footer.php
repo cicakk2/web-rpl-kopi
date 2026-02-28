@@ -9,6 +9,7 @@
                 <p class="footer-description">Menghadirkan bubuk kopi pilihan berkualitas dari biji terbaik Nusantara.</p>
                 <div class="social-icons">
                     <a href="#" class="social-icon">IG</a>
+                    <a href="#" class="social-icon">WA</a>
                 </div>
             </div>
             

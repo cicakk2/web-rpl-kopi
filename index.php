@@ -74,9 +74,7 @@ $featured_result = mysqli_query($conn, $featured_query);
                 <?php while ($product = mysqli_fetch_assoc($featured_result)): ?>
                     <div class="product-card">
                         <div class="product-image" style="background: linear-gradient(135deg, #6B4423 0%, #3E2723 100%);">
-                            <?php if ($product['is_organic']): ?>
-                                <span class="product-badge">Organic</span>
-                            <?php endif; ?>
+                            
                         </div>
                         
                         <div class="product-info">
@@ -102,7 +100,7 @@ $featured_result = mysqli_query($conn, $featured_query);
         <div class="container">
             <div class="cta-content">
                 <h2>Temukan Kopi Favoritmu Sekarang</h2>
-                <p>Jelajahi berbagai pilihan roast terbaik bersama kami</p>
+                <p>Jelajahi berbagai pilihan kopi terbaik bersama kami</p>
                 <a href="contact.php" class="btn btn-light">Hubungi Kami</a>
             </div>
         </div>

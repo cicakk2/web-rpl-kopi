@@ -43,33 +43,29 @@ $result = mysqli_query($conn, $query);
                             $gradient = "linear-gradient(135deg, #4E342E 0%, #2C1810 100%)";
                         }
                 ?>
-                    <div class="product-card" data-category="<?php echo $row['roast_level']; ?>">
-                        <div class="product-image">
-                            <?php if($row['image_url']): ?>
-                                <!-- Display uploaded image -->
-                                <img src="uploads/<?php echo htmlspecialchars($row['image_url']); ?>" alt="<?php echo htmlspecialchars($row['name']); ?>" class="product-img">
-                            <?php else: ?>
-                                <!-- Fallback to gradient if no image -->
-                                <div class="product-img-placeholder" style="background: <?php echo $gradient; ?>;"></div>
-                            <?php endif; ?>
-                            
-                            <?php if($row['is_featured']): ?>
-                                <span class="product-badge badge-featured">Featured</span>
-                            <?php elseif($row['is_organic']): ?>
-                                <span class="product-badge badge-organic">Organic</span>
-                            <?php endif; ?>
-                        </div>
-                        <div class="product-info">
-                            <h3><?php echo htmlspecialchars($row['name']); ?></h3>
-                            <p class="product-origin"><?php echo htmlspecialchars($row['origin']); ?></p>
-                            <p class="product-notes"><?php echo htmlspecialchars($row['flavor_notes']); ?></p>
-                            <p class="product-description"><?php echo htmlspecialchars($row['description']); ?></p>
-                            <div class="product-footer">
-                                <span class="product-price">Rp <?php echo number_format($row['price'], 0, ',', '.'); ?></span>
-                                <button class="btn-small">Add to Cart</button>
+                    <a href="product-detail.php?id=<?php echo $row['id']; ?>" class="product-card-link">
+                        <div class="product-card" data-category="<?php echo $row['roast_level']; ?>">
+                            <div class="product-image">
+                                <?php if($row['image_url']): ?>
+                                    <!-- Display uploaded image -->
+                                    <img src="uploads/<?php echo htmlspecialchars($row['image_url']); ?>" alt="<?php echo htmlspecialchars($row['name']); ?>" class="product-img">
+                                <?php else: ?>
+                                    <!-- Fallback to gradient if no image -->
+                                    <div class="product-img-placeholder" style="background: <?php echo $gradient; ?>;"></div>
+                                <?php endif; ?>
+                                
+                            </div>
+                            <div class="product-info">
+                                <h3><?php echo htmlspecialchars($row['name']); ?></h3>
+                                <p class="product-origin"><?php echo htmlspecialchars($row['origin']); ?></p>
+                                <p class="product-notes"><?php echo htmlspecialchars($row['flavor_notes']); ?></p>
+                                <p class="product-description"><?php echo htmlspecialchars($row['description']); ?></p>
+                                <div class="product-footer">
+                                    <span class="product-price">Rp <?php echo number_format($row['price'], 0, ',', '.'); ?></span>
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    </a>
                 <?php 
                     endwhile; 
                 else: 
