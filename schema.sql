@@ -1,212 +1,291 @@
--- ==========================================
--- Coffee Business Database Schema
--- ==========================================
+-- phpMyAdmin SQL Dump
+-- version 5.2.1
+-- https://www.phpmyadmin.net/
+--
+-- Host: localhost
+-- Generation Time: Feb 28, 2026 at 12:56 PM
+-- Server version: 10.4.32-MariaDB
+-- PHP Version: 8.2.12
 
--- Create database
-CREATE DATABASE IF NOT EXISTS coffee_business;
-USE coffee_business;
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+START TRANSACTION;
+SET time_zone = "+00:00";
 
--- ==========================================
--- Table: products
--- Stores coffee product information
--- ==========================================
-CREATE TABLE IF NOT EXISTS products (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(255) NOT NULL,
-    origin VARCHAR(100) NOT NULL,
-    roast_level ENUM('light', 'medium', 'dark') NOT NULL,
-    flavor_notes TEXT,
-    description TEXT,
-    price DECIMAL(10, 2) NOT NULL,
-    stock_quantity INT DEFAULT 0,
-    image_url VARCHAR(255),
-    is_featured BOOLEAN DEFAULT FALSE,
-    is_organic BOOLEAN DEFAULT FALSE,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    INDEX idx_roast_level (roast_level),
-    INDEX idx_is_featured (is_featured)
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
+
+--
+-- Database: `coffee_business`
+--
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `admins`
+--
+
+CREATE TABLE `admins` (
+  `id` int(11) NOT NULL,
+  `username` varchar(50) NOT NULL,
+  `password` varchar(255) NOT NULL,
+  `full_name` varchar(100) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `is_active` tinyint(1) DEFAULT 1,
+  `last_login` timestamp NULL DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- ==========================================
--- Table: admins
--- Stores administrator accounts
--- ==========================================
-CREATE TABLE IF NOT EXISTS admins (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    username VARCHAR(50) NOT NULL UNIQUE,
-    password VARCHAR(255) NOT NULL,
-    full_name VARCHAR(100) NOT NULL,
-    email VARCHAR(255) NOT NULL,
-    is_active BOOLEAN DEFAULT TRUE,
-    last_login TIMESTAMP NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    INDEX idx_username (username),
-    INDEX idx_email (email)
+--
+-- Dumping data for table `admins`
+--
+
+INSERT INTO `admins` (`id`, `username`, `password`, `full_name`, `email`, `is_active`, `last_login`, `created_at`, `updated_at`) VALUES
+(1, 'admin', '$2y$10$MI9STNGUwUwsPYuXfUYjB.cwwBKpNgPljghHC.UiQjySfha3ZrZ.K', 'Administrator', 'admin@roastedbliss.com', 1, '2026-02-28 09:03:41', '2026-02-27 12:17:26', '2026-02-28 09:03:41');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `customers`
+--
+
+CREATE TABLE `customers` (
+  `id` int(11) NOT NULL,
+  `first_name` varchar(100) NOT NULL,
+  `last_name` varchar(100) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `phone` varchar(20) DEFAULT NULL,
+  `address` text DEFAULT NULL,
+  `city` varchar(100) DEFAULT NULL,
+  `state` varchar(100) DEFAULT NULL,
+  `postal_code` varchar(20) DEFAULT NULL,
+  `country` varchar(100) DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- ==========================================
--- Table: contacts
--- Stores customer contact form submissions
--- ==========================================
-CREATE TABLE IF NOT EXISTS contacts (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(255) NOT NULL,
-    email VARCHAR(255) NOT NULL,
-    subject VARCHAR(255) NOT NULL,
-    message TEXT NOT NULL,
-    status ENUM('new', 'read', 'replied') DEFAULT 'new',
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    INDEX idx_status (status),
-    INDEX idx_created_at (created_at)
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `orders`
+--
+
+CREATE TABLE `orders` (
+  `id` int(11) NOT NULL,
+  `customer_id` int(11) NOT NULL,
+  `order_number` varchar(50) NOT NULL,
+  `total_amount` decimal(10,2) NOT NULL,
+  `status` enum('pending','processing','shipped','delivered','cancelled') DEFAULT 'pending',
+  `shipping_address` text DEFAULT NULL,
+  `payment_method` varchar(50) DEFAULT NULL,
+  `payment_status` enum('pending','paid','failed','refunded') DEFAULT 'pending',
+  `notes` text DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- ==========================================
--- Table: customers
--- Stores customer information
--- ==========================================
-CREATE TABLE IF NOT EXISTS customers (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    first_name VARCHAR(100) NOT NULL,
-    last_name VARCHAR(100) NOT NULL,
-    email VARCHAR(255) NOT NULL UNIQUE,
-    phone VARCHAR(20),
-    address TEXT,
-    city VARCHAR(100),
-    state VARCHAR(100),
-    postal_code VARCHAR(20),
-    country VARCHAR(100),
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    INDEX idx_email (email)
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `order_items`
+--
+
+CREATE TABLE `order_items` (
+  `id` int(11) NOT NULL,
+  `order_id` int(11) NOT NULL,
+  `product_id` int(11) NOT NULL,
+  `quantity` int(11) NOT NULL,
+  `price` decimal(10,2) NOT NULL,
+  `subtotal` decimal(10,2) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- ==========================================
--- Table: orders
--- Stores order information
--- ==========================================
-CREATE TABLE IF NOT EXISTS orders (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    customer_id INT NOT NULL,
-    order_number VARCHAR(50) NOT NULL UNIQUE,
-    total_amount DECIMAL(10, 2) NOT NULL,
-    status ENUM('pending', 'processing', 'shipped', 'delivered', 'cancelled') DEFAULT 'pending',
-    shipping_address TEXT,
-    payment_method VARCHAR(50),
-    payment_status ENUM('pending', 'paid', 'failed', 'refunded') DEFAULT 'pending',
-    notes TEXT,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY (customer_id) REFERENCES customers(id) ON DELETE CASCADE,
-    INDEX idx_customer_id (customer_id),
-    INDEX idx_status (status),
-    INDEX idx_order_number (order_number)
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `products`
+--
+
+CREATE TABLE `products` (
+  `id` int(11) NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `origin` varchar(100) NOT NULL,
+  `flavor_notes` text DEFAULT NULL,
+  `description` text DEFAULT NULL,
+  `price` decimal(10,2) NOT NULL,
+  `stock_quantity` int(11) DEFAULT 0,
+  `image_url` varchar(255) DEFAULT NULL,
+  `is_featured` tinyint(1) DEFAULT 0,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- ==========================================
--- Table: order_items
--- Stores individual items in each order
--- ==========================================
-CREATE TABLE IF NOT EXISTS order_items (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    order_id INT NOT NULL,
-    product_id INT NOT NULL,
-    quantity INT NOT NULL,
-    price DECIMAL(10, 2) NOT NULL,
-    subtotal DECIMAL(10, 2) NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE,
-    FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE,
-    INDEX idx_order_id (order_id),
-    INDEX idx_product_id (product_id)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+-- --------------------------------------------------------
 
--- ==========================================
--- Table: newsletter_subscribers
--- Stores newsletter subscription information
--- ==========================================
-CREATE TABLE IF NOT EXISTS newsletter_subscribers (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    email VARCHAR(255) NOT NULL UNIQUE,
-    status ENUM('active', 'unsubscribed') DEFAULT 'active',
-    subscribed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    unsubscribed_at TIMESTAMP NULL,
-    INDEX idx_email (email),
-    INDEX idx_status (status)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+--
+-- Stand-in structure for view `v_featured_products`
+-- (See below for the actual view)
+--
+CREATE TABLE `v_featured_products` (
+);
 
--- ==========================================
--- Insert Default Admin User
--- Username: admin
--- Password: admin123 (Please change after first login!)
--- ==========================================
-INSERT INTO admins (username, password, full_name, email) VALUES
-('admin', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'Administrator', 'admin@roastedbliss.com');
+-- --------------------------------------------------------
 
--- ==========================================
--- Insert Sample Products
--- ==========================================
-INSERT INTO products (name, origin, roast_level, flavor_notes, description, price, stock_quantity, is_featured, is_organic) VALUES
-('Ethiopian Yirgacheffe', 'Ethiopia', 'light', 'Floral, Citrus, Tea-like', 'A bright and complex coffee with delicate floral notes and citrus undertones. Perfect for pour-over brewing.', 18.99, 50, TRUE, FALSE),
-('Colombian Supremo', 'Colombia', 'medium', 'Caramel, Nuts, Chocolate', 'A well-balanced coffee with sweet caramel notes and a smooth, chocolatey finish. Versatile for any brewing method.', 16.99, 75, TRUE, FALSE),
-('Sumatra Mandheling', 'Indonesia', 'dark', 'Earthy, Herbal, Spiced', 'A full-bodied coffee with earthy complexity and herbal notes. Low acidity makes it ideal for espresso.', 17.99, 60, TRUE, FALSE),
-('Kenya AA', 'Kenya', 'light', 'Berry, Wine, Bright', 'Vibrant acidity with berry-like sweetness and wine-like complexity. A true connoisseur\'s choice.', 19.99, 40, FALSE, FALSE),
-('Guatemala Antigua', 'Guatemala', 'medium', 'Cocoa, Spice, Smoky', 'Rich and complex with cocoa notes and a hint of smoke. Grown in volcanic soil at high altitude.', 17.49, 55, FALSE, FALSE),
-('Costa Rica Tarrazu', 'Costa Rica', 'medium', 'Honey, Citrus, Clean', 'Certified organic with honey sweetness and bright citrus acidity. Clean and crisp finish.', 18.49, 45, FALSE, TRUE),
-('Italian Espresso Blend', 'Blend', 'dark', 'Bold, Rich, Creamy', 'Our signature espresso blend. Bold and intense with a creamy crema. Perfect for straight shots or milk drinks.', 16.49, 80, FALSE, FALSE),
-('Panama Geisha', 'Panama', 'light', 'Jasmine, Tropical, Delicate', 'An ultra-premium coffee with jasmine aromatics and tropical fruit flavors. Limited availability.', 24.99, 20, FALSE, FALSE),
-('French Roast', 'Blend', 'dark', 'Bold, Smoky, Intense', 'A classic dark roast with bold, smoky flavors and low acidity. Strong and satisfying.', 15.99, 90, FALSE, FALSE);
+--
+-- Stand-in structure for view `v_low_stock_products`
+-- (See below for the actual view)
+--
+CREATE TABLE `v_low_stock_products` (
+`id` int(11)
+,`name` varchar(255)
+,`origin` varchar(100)
+,`stock_quantity` int(11)
+);
 
--- ==========================================
--- Sample Contact Entry
--- ==========================================
-INSERT INTO contacts (name, email, subject, message, status) VALUES
-('John Doe', 'john@example.com', 'Product Inquiry', 'I would like to know more about your Ethiopian Yirgacheffe coffee.', 'new');
+-- --------------------------------------------------------
 
--- ==========================================
--- Create Views for Reporting
--- ==========================================
+--
+-- Stand-in structure for view `v_order_summary`
+-- (See below for the actual view)
+--
+CREATE TABLE `v_order_summary` (
+`id` int(11)
+,`order_number` varchar(50)
+,`customer_name` varchar(201)
+,`email` varchar(255)
+,`total_amount` decimal(10,2)
+,`status` enum('pending','processing','shipped','delivered','cancelled')
+,`created_at` timestamp
+);
 
--- View: Featured Products
-CREATE OR REPLACE VIEW v_featured_products AS
-SELECT 
-    id,
-    name,
-    origin,
-    roast_level,
-    flavor_notes,
-    price,
-    stock_quantity
-FROM products
-WHERE is_featured = TRUE AND stock_quantity > 0
-ORDER BY name;
+-- --------------------------------------------------------
 
--- View: Order Summary
-CREATE OR REPLACE VIEW v_order_summary AS
-SELECT 
-    o.id,
-    o.order_number,
-    CONCAT(c.first_name, ' ', c.last_name) as customer_name,
-    c.email,
-    o.total_amount,
-    o.status,
-    o.created_at
-FROM orders o
-JOIN customers c ON o.customer_id = c.id
-ORDER BY o.created_at DESC;
+--
+-- Structure for view `v_featured_products`
+--
+DROP TABLE IF EXISTS `v_featured_products`;
 
--- View: Product Inventory Alert (Low Stock)
-CREATE OR REPLACE VIEW v_low_stock_products AS
-SELECT 
-    id,
-    name,
-    origin,
-    stock_quantity
-FROM products
-WHERE stock_quantity < 20
-ORDER BY stock_quantity ASC;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_featured_products`  AS SELECT `products`.`id` AS `id`, `products`.`name` AS `name`, `products`.`origin` AS `origin`, `products`.`roast_level` AS `roast_level`, `products`.`flavor_notes` AS `flavor_notes`, `products`.`price` AS `price`, `products`.`stock_quantity` AS `stock_quantity` FROM `products` WHERE `products`.`is_featured` = 1 AND `products`.`stock_quantity` > 0 ORDER BY `products`.`name` ASC ;
 
--- ==========================================
--- End of Schema
--- ==========================================
+-- --------------------------------------------------------
+
+--
+-- Structure for view `v_low_stock_products`
+--
+DROP TABLE IF EXISTS `v_low_stock_products`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_low_stock_products`  AS SELECT `products`.`id` AS `id`, `products`.`name` AS `name`, `products`.`origin` AS `origin`, `products`.`stock_quantity` AS `stock_quantity` FROM `products` WHERE `products`.`stock_quantity` < 20 ORDER BY `products`.`stock_quantity` ASC ;
+
+-- --------------------------------------------------------
+
+--
+-- Structure for view `v_order_summary`
+--
+DROP TABLE IF EXISTS `v_order_summary`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_order_summary`  AS SELECT `o`.`id` AS `id`, `o`.`order_number` AS `order_number`, concat(`c`.`first_name`,' ',`c`.`last_name`) AS `customer_name`, `c`.`email` AS `email`, `o`.`total_amount` AS `total_amount`, `o`.`status` AS `status`, `o`.`created_at` AS `created_at` FROM (`orders` `o` join `customers` `c` on(`o`.`customer_id` = `c`.`id`)) ORDER BY `o`.`created_at` DESC ;
+
+--
+-- Indexes for dumped tables
+--
+
+--
+-- Indexes for table `admins`
+--
+ALTER TABLE `admins`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `username` (`username`),
+  ADD KEY `idx_username` (`username`),
+  ADD KEY `idx_email` (`email`);
+
+--
+-- Indexes for table `customers`
+--
+ALTER TABLE `customers`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `email` (`email`),
+  ADD KEY `idx_email` (`email`);
+
+--
+-- Indexes for table `orders`
+--
+ALTER TABLE `orders`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `order_number` (`order_number`),
+  ADD KEY `idx_customer_id` (`customer_id`),
+  ADD KEY `idx_status` (`status`),
+  ADD KEY `idx_order_number` (`order_number`);
+
+--
+-- Indexes for table `order_items`
+--
+ALTER TABLE `order_items`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `idx_order_id` (`order_id`),
+  ADD KEY `idx_product_id` (`product_id`);
+
+--
+-- Indexes for table `products`
+--
+ALTER TABLE `products`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `idx_is_featured` (`is_featured`);
+
+--
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `admins`
+--
+ALTER TABLE `admins`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `customers`
+--
+ALTER TABLE `customers`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `orders`
+--
+ALTER TABLE `orders`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `order_items`
+--
+ALTER TABLE `order_items`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `products`
+--
+ALTER TABLE `products`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
+
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `orders`
+--
+ALTER TABLE `orders`
+  ADD CONSTRAINT `orders_ibfk_1` FOREIGN KEY (`customer_id`) REFERENCES `customers` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `order_items`
+--
+ALTER TABLE `order_items`
+  ADD CONSTRAINT `order_items_ibfk_1` FOREIGN KEY (`order_id`) REFERENCES `orders` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `order_items_ibfk_2` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`) ON DELETE CASCADE;
+COMMIT;
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
