@@ -57,7 +57,6 @@ $page = 'home';
     <!-- Featured Products -->
 <?php
 // 1. Query untuk mengambil produk yang di-set sebagai featured
-// Kita batasi 3 produk saja agar sesuai dengan layout grid awal
 $featured_query = "SELECT * FROM products WHERE is_featured = 1 ORDER BY created_at DESC LIMIT 3";
 $featured_result = mysqli_query($conn, $featured_query);
 ?>
@@ -71,10 +70,22 @@ $featured_result = mysqli_query($conn, $featured_query);
         
         <div class="products-grid">
             <?php if (mysqli_num_rows($featured_result) > 0): ?>
-                <?php while ($product = mysqli_fetch_assoc($featured_result)): ?>
+                <?php while ($product = mysqli_fetch_assoc($featured_result)): 
+                    // Logika penentuan gradien (konsisten dengan product.php)
+                    $gradient = "linear-gradient(135deg, #8B5A3C 0%, #4E342E 100%)"; // Default medium
+                    if($product['roast_level'] == 'light') {
+                        $gradient = "linear-gradient(135deg, #6B4423 0%, #3E2723 100%)";
+                    } elseif($product['roast_level'] == 'dark') {
+                        $gradient = "linear-gradient(135deg, #4E342E 0%, #2C1810 100%)";
+                    }
+                ?>
                     <div class="product-card">
-                        <div class="product-image" style="background: linear-gradient(135deg, #6B4423 0%, #3E2723 100%);">
-                            
+                        <div class="product-image">
+                            <?php if($product['image_url']): ?>
+                                <img src="uploads/<?php echo htmlspecialchars($product['image_url']); ?>" alt="<?php echo htmlspecialchars($product['name']); ?>" class="product-img">
+                            <?php else: ?>
+                                <div class="product-img-placeholder" style="background: <?php echo $gradient; ?>; width: 100%; height: 100%; min-height: 250px;"></div>
+                            <?php endif; ?>
                         </div>
                         
                         <div class="product-info">
@@ -83,14 +94,14 @@ $featured_result = mysqli_query($conn, $featured_query);
                             <p class="product-notes"><?php echo htmlspecialchars($product['flavor_notes']); ?></p>
                             
                             <div class="product-footer">
-                                <span class="product-price">$<?php echo number_format($product['price'], 2); ?></span>
-                                <a href="product.php?id=<?php echo $product['id']; ?>" class="btn-small">View</a>
+                                <span class="product-price">Rp <?php echo number_format($product['price'], 0, ',', '.'); ?></span>
+                                <a href="product-detail.php?id=<?php echo $product['id']; ?>" class="btn-small">Lihat</a>
                             </div>
                         </div>
                     </div>
                 <?php endwhile; ?>
             <?php else: ?>
-                <p class="text-center">No featured products at the moment.</p>
+                <p class="text-center">Belum ada produk pilihan saat ini.</p>
             <?php endif; ?>
         </div>
     </div>

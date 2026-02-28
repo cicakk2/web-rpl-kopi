@@ -447,6 +447,17 @@ img {
     box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
 }
 
+.product-card-link {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+    transition: var(--transition);
+}
+
+.product-card-link:hover {
+    text-decoration: none;
+}
+
 .product-image {
     height: 250px;
     position: relative;
@@ -523,7 +534,6 @@ img {
 .product-notes {
     font-size: 0.9rem;
     color: var(--text-light);
-    font-style: italic;
     margin-bottom: 1rem;
 }
 

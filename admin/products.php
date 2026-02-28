@@ -44,13 +44,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $id = isset($_POST['id']) ? intval($_POST['id']) : 0;
     $name = mysqli_real_escape_string($conn, $_POST['name']);
     $origin = mysqli_real_escape_string($conn, $_POST['origin']);
-    $roast_level = mysqli_real_escape_string($conn, $_POST['roast_level']);
     $flavor_notes = mysqli_real_escape_string($conn, $_POST['flavor_notes']);
     $description = mysqli_real_escape_string($conn, $_POST['description']);
     $price = floatval($_POST['price']);
     $stock_quantity = intval($_POST['stock_quantity']);
     $is_featured = isset($_POST['is_featured']) ? 1 : 0;
-    $is_organic = isset($_POST['is_organic']) ? 1 : 0;
     $image_url = '';
     
     $upload_ok = true;
@@ -116,13 +114,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Save to database
     if ($upload_ok && !$error_message) {
         if ($id > 0) {
-            $sql = "UPDATE products SET name=?, origin=?, roast_level=?, flavor_notes=?, description=?, price=?, stock_quantity=?, is_featured=?, is_organic=?, image_url=? WHERE id=?";
+            $sql = "UPDATE products SET name=?, origin=?, flavor_notes=?, description=?, price=?, stock_quantity=?, is_featured=?, image_url=? WHERE id=?";
             $stmt = mysqli_prepare($conn, $sql);
-            mysqli_stmt_bind_param($stmt, "sssssdiiisi", $name, $origin, $roast_level, $flavor_notes, $description, $price, $stock_quantity, $is_featured, $is_organic, $image_url, $id);
+            mysqli_stmt_bind_param($stmt, "ssssdiisi", $name, $origin, $flavor_notes, $description, $price, $stock_quantity, $is_featured, $image_url, $id);
         } else {
-            $sql = "INSERT INTO products (name, origin, roast_level, flavor_notes, description, price, stock_quantity, is_featured, is_organic, image_url) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            $sql = "INSERT INTO products (name, origin, flavor_notes, description, price, stock_quantity, is_featured, image_url) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
             $stmt = mysqli_prepare($conn, $sql);
-            mysqli_stmt_bind_param($stmt, "sssssdiiis", $name, $origin, $roast_level, $flavor_notes, $description, $price, $stock_quantity, $is_featured, $is_organic, $image_url);
+            mysqli_stmt_bind_param($stmt, "ssssdiis", $name, $origin, $flavor_notes, $description, $price, $stock_quantity, $is_featured, $image_url);
         }
         
         if (mysqli_stmt_execute($stmt)) {
@@ -184,7 +182,6 @@ $products_result = mysqli_query($conn, $products_query);
                                 <th>Gambar</th>
                                 <th>Nama</th>
                                 <th>Asal</th>
-                                <th>Roast</th>
                                 <th>Harga</th>
                                 <th>Stok</th>
                                 <th>Status</th>
@@ -204,7 +201,6 @@ $products_result = mysqli_query($conn, $products_query);
                                         </td>
                                         <td><strong><?php echo htmlspecialchars($product['name']); ?></strong></td>
                                         <td><?php echo htmlspecialchars($product['origin']); ?></td>
-                                        <td><span class="badge badge-<?php echo $product['roast_level']; ?>"><?php echo ucfirst($product['roast_level']); ?></span></td>
                                         <td>Rp <?php echo number_format($product['price'], 0, ',', '.'); ?></td>
                                         <td><?php echo $product['stock_quantity']; ?></td>
                                         <td>
@@ -223,7 +219,7 @@ $products_result = mysqli_query($conn, $products_query);
                                     </tr>
                                 <?php endwhile; ?>
                             <?php else: ?>
-                                <tr><td colspan="8" class="text-center">Belum ada produk.</td></tr>
+                                <tr><td colspan="7" class="text-center">Belum ada produk.</td></tr>
                             <?php endif; ?>
                         </tbody>
                     </table>
@@ -252,19 +248,9 @@ $products_result = mysqli_query($conn, $products_query);
                     </div>
                 </div>
                 
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>Roast Level *</label>
-                        <select id="roast_level" name="roast_level" required>
-                            <option value="light">Light</option>
-                            <option value="medium">Medium</option>
-                            <option value="dark">Dark</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>Flavor Notes *</label>
-                        <input type="text" id="flavor_notes" name="flavor_notes" required>
-                    </div>
+                <div class="form-group">
+                    <label>Deskripsi Rasa *</label>
+                    <input type="text" id="flavor_notes" name="flavor_notes" required>
                 </div>
                 
                 <div class="form-group">
@@ -308,9 +294,6 @@ $products_result = mysqli_query($conn, $products_query);
                     <label class="checkbox-label">
                         <input type="checkbox" id="is_featured" name="is_featured"> Featured
                     </label>
-                    <label class="checkbox-label">
-                        <input type="checkbox" id="is_organic" name="is_organic"> Organic
-                    </label>
                 </div>
                 
                 <div class="modal-footer">
@@ -345,13 +328,11 @@ $products_result = mysqli_query($conn, $products_query);
             document.getElementById('product_id').value = product.id;
             document.getElementById('name').value = product.name;
             document.getElementById('origin').value = product.origin;
-            document.getElementById('roast_level').value = product.roast_level;
             document.getElementById('flavor_notes').value = product.flavor_notes;
             document.getElementById('description').value = product.description;
             document.getElementById('price').value = product.price;
             document.getElementById('stock_quantity').value = product.stock_quantity;
             document.getElementById('is_featured').checked = product.is_featured == 1;
-            document.getElementById('is_organic').checked = product.is_organic == 1;
             
             if (product.image_url) {
                 previewImg.src = '../uploads/' + product.image_url;

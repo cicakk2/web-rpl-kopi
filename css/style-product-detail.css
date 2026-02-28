@@ -1,55 +1,45 @@
 /* ==========================================
-   Product Detail Page Styles
+   Product Detail Page Styles - Refined & Elegant
    ========================================== */
 
-/* Breadcrumb Navigation */
+/* Breadcrumb Navigation - Slower & Cleaner */
 .breadcrumb-section {
-    padding: 2rem 0;
+    padding: 1.5rem 0;
     background: var(--cream);
     margin-top: 80px;
-    border-bottom: 1px solid rgba(107, 68, 35, 0.1);
-}
-
-.breadcrumb-section .container {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
+    border-bottom: 1px solid rgba(107, 68, 35, 0.08);
 }
 
 .breadcrumb-link {
     color: var(--coffee-medium);
     text-decoration: none;
+    font-size: 0.85rem;
     font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 1px;
     transition: var(--transition);
-}
-
-.breadcrumb-link:hover {
-    color: var(--coffee-dark);
-}
-
-.breadcrumb-separator {
-    color: var(--text-light);
 }
 
 .breadcrumb-current {
     color: var(--text-dark);
-    font-weight: 600;
+    font-size: 0.85rem;
+    font-weight: 400;
 }
 
 /* Product Detail Section */
 .product-detail-section {
-    padding: 4rem 0;
+    padding: 3rem 0 5rem;
     background: var(--white);
 }
 
 .product-detail-grid {
     display: grid;
-    grid-template-columns: 1fr 1.2fr;
-    gap: 4rem;
+    grid-template-columns: 1fr 1fr; /* Balance 50-50 for more elegance */
+    gap: 5rem;
     align-items: start;
 }
 
-/* Product Detail Image */
+/* Image Styling - More Sophisticated */
 .product-detail-image {
     position: sticky;
     top: 120px;
@@ -58,314 +48,150 @@
 .product-detail-img {
     width: 100%;
     height: auto;
-    border-radius: 8px;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
-    display: block;
+    border-radius: 4px; /* Shorter radius for modern look */
+    box-shadow: 0 20px 40px rgba(44, 24, 16, 0.1);
 }
 
-.product-detail-placeholder {
-    width: 100%;
-    aspect-ratio: 1;
-    border-radius: 8px;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
-}
-
-/* Product Detail Content */
+/* Content Layout */
 .product-detail-content {
     display: flex;
     flex-direction: column;
-    gap: 2rem;
-}
-
-.product-detail-header {
-    display: flex;
-    align-items: flex-start;
-    gap: 1.5rem;
-    flex-wrap: wrap;
+    gap: 1.8rem;
 }
 
 .product-detail-title {
     font-family: var(--font-display);
-    font-size: 3rem;
+    font-size: 2.5rem; /* Reduced from 3rem for elegance */
     color: var(--coffee-dark);
-    line-height: 1.1;
-    flex: 1;
-    min-width: 200px;
+    line-height: 1.2;
+    margin-bottom: 0.5rem;
 }
 
-.product-badge-detail {
-    display: inline-block;
-    padding: 0.6rem 1.2rem;
-    background: var(--coffee-medium);
-    color: var(--white);
-    border-radius: 20px;
-    font-size: 0.85rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    white-space: nowrap;
-    align-self: flex-start;
-}
-
-.badge-featured {
-    background: linear-gradient(135deg, var(--coffee-medium) 0%, var(--coffee-dark) 100%);
-}
-
-/* Product Metadata */
+/* Metadata - Tighter Grid */
 .product-meta {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 2rem;
-    padding: 2rem 0;
-    border-top: 1px solid rgba(107, 68, 35, 0.1);
-    border-bottom: 1px solid rgba(107, 68, 35, 0.1);
-}
-
-.meta-item {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
+    gap: 1.5rem;
+    padding: 1.5rem 0;
+    border-top: 1px solid rgba(107, 68, 35, 0.08);
+    border-bottom: 1px solid rgba(107, 68, 35, 0.08);
 }
 
 .meta-label {
-    font-size: 0.9rem;
+    font-size: 0.75rem;
     font-weight: 600;
-    color: var(--text-light);
+    color: var(--coffee-medium);
     text-transform: uppercase;
-    letter-spacing: 0.5px;
+    letter-spacing: 1.5px;
+    margin-bottom: 0.3rem;
 }
 
 .meta-value {
-    font-family: var(--font-display);
-    font-size: 1.3rem;
-    color: var(--coffee-dark);
-    font-weight: 600;
+    font-family: var(--font-body);
+    font-size: 1rem;
+    color: var(--text-dark);
+    font-weight: 500;
 }
 
-/* Flavor Notes Section */
+/* Flavor Notes - Subtle Background */
 .flavor-notes-section {
-    background: var(--cream);
-    padding: 2rem;
-    border-radius: 8px;
+    background: #FAF6F2;
+    padding: 1.5rem;
+    border-left: 3px solid var(--coffee-cream);
+    border-radius: 0 4px 4px 0;
 }
 
 .flavor-notes-title {
-    font-family: var(--font-display);
-    font-size: 1.5rem;
+    font-size: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
     color: var(--coffee-dark);
-    margin-bottom: 0.8rem;
+    margin-bottom: 0.5rem;
 }
 
 .flavor-notes-text {
-    font-size: 1.1rem;
+    font-size: 1rem;
     color: var(--text-light);
-    line-height: 1.8;
+    line-height: 1.6;
     font-style: italic;
 }
 
-/* Product Description */
-.product-full-description {
-    background: var(--white);
-}
-
-.description-title {
-    font-family: var(--font-display);
-    font-size: 1.5rem;
-    color: var(--coffee-dark);
-    margin-bottom: 1rem;
-}
-
-.product-full-description p {
-    font-size: 1rem;
-    color: var(--text-light);
-    line-height: 1.8;
-}
-
 /* Price Section */
-.product-detail-footer {
-    display: flex;
-    flex-direction: column;
-    gap: 2rem;
-    padding-top: 2rem;
-    border-top: 1px solid rgba(107, 68, 35, 0.1);
-}
-
 .price-section {
     display: flex;
-    align-items: baseline;
+    align-items: center;
     gap: 1rem;
-}
-
-.price-label {
-    font-size: 1rem;
-    font-weight: 600;
-    color: var(--text-light);
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
+    margin-top: 1rem;
 }
 
 .price-amount {
     font-family: var(--font-display);
-    font-size: 2rem;
-    color: var(--coffee-medium);
+    font-size: 2.2rem;
+    color: var(--coffee-dark);
     font-weight: 700;
 }
 
-/* Checkout Buttons */
+/* Buttons - Stronger Contrast & Theme Fit */
 .checkout-buttons {
     display: flex;
     gap: 1rem;
-    flex-wrap: wrap;
+    margin-top: 1rem;
 }
 
 .btn-checkout {
-    flex: 1;
-    min-width: 150px;
-    padding: 1.2rem 2rem;
-    font-size: 1rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 1px;
+    flex: 2;
+    background: var(--coffee-dark); /* Solid Dark Coffee for clarity */
+    color: var(--white);
+    padding: 1.2rem;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    transition: all 0.4s ease;
+    border: none;
+}
+
+.btn-checkout:hover {
+    background: var(--coffee-medium);
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(44, 24, 16, 0.2);
 }
 
 .btn-back {
     flex: 1;
-    min-width: 150px;
-    padding: 1.2rem 2rem;
-    font-size: 1rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    text-decoration: none;
-    text-align: center;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
     background: transparent;
-    color: var(--coffee-medium);
-    border: 2px solid var(--coffee-medium);
+    color: var(--coffee-dark);
+    border: 1px solid var(--coffee-dark);
+    padding: 1.2rem;
+    border-radius: 4px;
+    font-size: 0.9rem;
 }
 
 .btn-back:hover {
-    background: var(--coffee-medium);
-    color: var(--white);
-}
-
-/* Link styling for product cards */
-.product-card-link {
-    text-decoration: none;
-    color: inherit;
-    display: block;
-}
-
-/* Related Products Section */
-.related-products-section {
-    padding: 6rem 0;
-    background: var(--cream);
-}
-
-.section-title {
-    font-family: var(--font-display);
-    font-size: 2.5rem;
+    background: rgba(44, 24, 16, 0.05);
     color: var(--coffee-dark);
-    text-align: center;
-    margin-bottom: 3rem;
 }
 
-/* Product Card Link Hover Effect */
-.product-card-link {
-    transition: var(--transition);
-}
-
-.product-card-link:hover .product-card {
-    transform: translateY(-5px);
-    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
-}
-
-/* ==========================================
-   Responsive Design for Product Detail
-   ========================================== */
-
-@media (max-width: 1024px) {
+/* Responsive Fixes */
+@media (max-width: 992px) {
     .product-detail-grid {
         grid-template-columns: 1fr;
         gap: 3rem;
     }
     
     .product-detail-image {
-        position: static;
+        max-width: 500px;
+        margin: 0 auto;
     }
-    
-    .product-detail-title {
-        font-size: 2.5rem;
-    }
-    
-    .price-amount {
-        font-size: 1.8rem;
-    }
-}
 
-@media (max-width: 768px) {
-    .breadcrumb-section {
-        margin-top: 70px;
-    }
-    
-    .product-detail-section {
-        padding: 2rem 0;
-    }
-    
-    .product-detail-grid {
-        gap: 2rem;
-    }
-    
     .product-detail-title {
-        font-size: 2rem;
+        font-size: 2.2rem;
+        text-align: center;
     }
-    
-    .product-meta {
-        grid-template-columns: 1fr;
-        gap: 1rem;
-        padding: 1.5rem 0;
+
+    .price-section {
+        justify-content: center;
     }
-    
-    .product-detail-footer {
-        gap: 1.5rem;
-    }
-    
+
     .checkout-buttons {
         flex-direction: column;
-    }
-    
-    .btn-checkout,
-    .btn-back {
-        width: 100%;
-        min-width: unset;
-    }
-    
-    .section-title {
-        font-size: 2rem;
-    }
-}
-
-@media (max-width: 480px) {
-    .product-detail-title {
-        font-size: 1.5rem;
-    }
-    
-    .meta-value {
-        font-size: 1.1rem;
-    }
-    
-    .price-amount {
-        font-size: 1.5rem;
-    }
-    
-    .flavor-notes-section {
-        padding: 1.5rem;
-    }
-    
-    .flavor-notes-title,
-    .description-title {
-        font-size: 1.2rem;
     }
 }

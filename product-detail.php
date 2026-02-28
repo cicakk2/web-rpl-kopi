@@ -31,6 +31,7 @@ if($product['roast_level'] == 'light') {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo htmlspecialchars($product['name']); ?> - Robusta Dampit</title>
     <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/style-product-detail.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -79,7 +80,7 @@ if($product['roast_level'] == 'light') {
 
                     <!-- Flavor Notes -->
                     <div class="flavor-notes-section">
-                        <h3 class="flavor-notes-title">Profil Rasa</h3>
+                        <h3 class="flavor-notes-title">Deskripsi Rasa</h3>
                         <p class="flavor-notes-text"><?php echo htmlspecialchars($product['flavor_notes']); ?></p>
                     </div>
 
@@ -101,7 +102,7 @@ if($product['roast_level'] == 'light') {
                                 Tambah ke Keranjang
                             </button>
                             <a href="product.php" class="btn btn-secondary btn-back">
-                                Kembali ke Produk
+                                Lihat Produk Lainnya
                             </a>
                         </div>
                     </div>
